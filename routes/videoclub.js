@@ -70,6 +70,7 @@ router.post('/pelicula', function (req, res) {
                 } else {
                     res.status(201);
                     res.json({
+                        id: result['insertedIds']['0'],
                         insertado : true
                     });
                 }
@@ -93,8 +94,20 @@ router.get('/pelicula/:id', function (req, res) {
                     localizado : false
                 });
             } else {
-                res.status(200);
-                res.send(result[0]);
+                if (result.length === 0){
+                    //Cuando se solicita una película que no existe
+                    res.status(500);
+                    res.json({
+                        mensaje : "La película solicitada no existe",
+                        localizado : false
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        resultado : result[0],
+                        localizado : true
+                    });
+                }
             }
             client.close();
         });
@@ -116,10 +129,18 @@ router.delete('/pelicula/:id', function (req, res) {
                     eliminado : false
                 });
             } else {
-                res.status(200);
-                res.json({
-                    eliminado : true,
-                });
+                if (result['result']['n'] === 0) {
+                    res.status(500);
+                    res.json({
+                        mensaje: "La película a eliminar no existe",
+                        eliminado : false
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        eliminado : true
+                    });
+                }
             }
             client.close();
         });
@@ -145,10 +166,18 @@ router.put('/pelicula/:id', function (req, res) {
                         modificado : false
                     });
                 } else {
-                    res.status(201);
-                    res.json({
-                        modificado : true
-                    });
+                    if (result['result']['nModified'] === 0) {
+                        res.status(500);
+                        res.json({
+                            mensaje: "La película que intenta modificar no existe",
+                            modificado : false
+                        });
+                    } else {
+                        res.status(201);
+                        res.json({
+                            modificado : true
+                        });
+                    }
                 }
                 client.close();
             });
@@ -197,6 +226,7 @@ router.post('/disco', function (req, res) {
                 } else {
                     res.status(201);
                     res.json({
+                        id: result['insertedIds']['0'],
                         insertado : true
                     });
                 }
@@ -220,8 +250,20 @@ router.get('/disco/:id', function (req, res) {
                     localizado : false
                 });
             } else {
-                res.status(200);
-                res.send(result[0]);
+                if (result.length === 0){
+                    //Cuando se solicita un disco que no existe
+                    res.status(500);
+                    res.json({
+                        mensaje : "El disco solicitado no existe",
+                        localizado : false
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        resultado : result[0],
+                        localizado : true
+                    });
+                }
             }
             client.close();
         });
@@ -243,10 +285,18 @@ router.delete('/disco/:id', function (req, res) {
                     eliminado : false
                 });
             } else {
-                res.status(200);
-                res.json({
-                    eliminado : true,
-                });
+                if (result['result']['n'] === 0) {
+                    res.status(500);
+                    res.json({
+                        mensaje: "El disco a eliminar no existe",
+                        eliminado : false
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        eliminado : true
+                    });
+                }
             }
             client.close();
         });
@@ -267,14 +317,22 @@ router.put('/disco/:id', function (req, res) {
                 if (err) {
                     res.status(500);
                     res.json({
-                        mensaje : "Error al modificar la pelicula",
+                        mensaje : "Error al modificar el disco",
                         modificado : false
                     });
                 } else {
-                    res.status(201);
-                    res.json({
-                        modificado : true
-                    });
+                    if (result['result']['nModified'] === 0) {
+                        res.status(500);
+                        res.json({
+                            mensaje: "El disco que intenta modificar no existe",
+                            modificado : false
+                        });
+                    } else {
+                        res.status(201);
+                        res.json({
+                            modificado : true
+                        });
+                    }
                 }
                 client.close();
             });
